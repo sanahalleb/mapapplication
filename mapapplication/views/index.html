@@ -166,7 +166,7 @@
         </div>
         <div id='map'></div>
         <script>
-
+            var BaseURL= 'http://172.20.10.5'
             mapboxgl.accessToken = 'pk.eyJ1Ijoic2FuYWhhbGxlYiIsImEiOiJjanhha2wwbngwMTZ1M3dvejg3cnpjdnRsIn0.Qq1tbiEUuBxJzH9q9SDSDw';
             var map = new mapboxgl.Map({
                 container: 'map',
@@ -182,7 +182,7 @@
             function login(username,password) {
                 $("#map*").addClass("enable");
 
-                var url = 'http://172.20.10.3:3300/login/'+username+'/'+password;
+                var url = BaseURL+':3300/loginmap/'+username+'/'+password;
 
                 // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
                 var req = new XMLHttpRequest();
@@ -203,7 +203,7 @@
             function getEndPointFromURL() {
 
 
-                var url = 'http://172.20.10.3:3300/position/sana';
+                var url = BaseURL+':3300/position/sana';
 
                 // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
                 var req = new XMLHttpRequest();
