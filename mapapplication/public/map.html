@@ -3,7 +3,7 @@
 
 <head>
     <meta charset='utf-8' />
-    <title>Display driving directions</title>
+    <title>mFlacker</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
     <script
@@ -133,10 +133,15 @@
         .has-val.input100+.focus-input100::after {
             color: #a64bf4;
         }
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
     </style>
 </head>
+<body></body>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css' type='text/css' />
 
-<body>
+
     
         <div id='map'></div>
         <script>
@@ -146,22 +151,13 @@
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v10',
                 center: [10.18938160109326, 36.90004868883172], // starting position
-                zoom: 10
+                zoom: 12
             });
-            //$("#map*").addClass("disable")
-
-            // set the bounds of the map
-            //var bounds = [[10,36]];
-            //map.setMaxBounds(boundss);
             
-            // initialize the map canvas to interact with later
+            
+        
             var canvas = map.getCanvasContainer();
-
-            // an arbitrary start will always be the same
-            // only the end or destination will change
             var start = [10.18938160109326, 36.90004868883172];
-
-
             function getEndPointFromURL() {
 
 
@@ -180,7 +176,6 @@
                         accessToken: mapboxgl.accessToken
                     });
                     map.addControl(directions, 'top-left');
-
                     directions.setOrigin(start.toString());
                     directions.setDestination(coords.toString());
                     console.log('coords', coords);
@@ -289,11 +284,6 @@
                 // starts and ends at the same location
                 getRoute(start);
                 getEndPointFromURL();
-
-
-
-
-
                 // Add starting point to the map
                 map.addLayer({
                     id: 'point',
