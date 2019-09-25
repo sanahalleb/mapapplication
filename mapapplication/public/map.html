@@ -16,50 +16,38 @@
             margin: 0;
             padding: 0;
         }
-
         #map {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 100%;
         }
-
         body {
             width: 100%;
-
         }
-
         .disable {
             display: none !important;
         }
-
         .enable {
             display: block !important;
         }
-
         .container-login {
             background-color: white;
             width: 50%;
             margin: auto;
-
         }
-
         .inputall {
             margin-left: 30%;
         }
-
         .username,
         .password {
             box-shadow: 30px 30px grey;
-
             width: 50%;
         }
-
         .logo {
             margin-left: 30%;
             width: 40%;
         }
-
         .login {
             width: 20%;
             shape-margin: 50%;
@@ -70,7 +58,6 @@
             background-color: orange;
             color: white;
         }
-
         .focus-input100 {
             position: absolute;
             display: block;
@@ -80,13 +67,11 @@
             left: 0;
             pointer-events: none;
         }
-
         .focus-input100::after {
             content: attr(data-symbol);
             font-family: Material-Design-Iconic-Font;
             color: #adadad;
             font-size: 22px;
-
             display: -webkit-box;
             display: -webkit-flex;
             display: -moz-box;
@@ -101,7 +86,6 @@
             padding-left: 13px;
             padding-top: 3px;
         }
-
         .focus-input100::before {
             content: "";
             display: block;
@@ -116,20 +100,15 @@
             -moz-transition: all 0.4s;
             transition: all 0.4s;
         }
-
-
         .input100:focus+.focus-input100::before {
             width: 100%;
         }
-
         .has-val.input100+.focus-input100::before {
             width: 100%;
         }
-
         .input100:focus+.focus-input100::after {
             color: #a64bf4;
         }
-
         .has-val.input100+.focus-input100::after {
             color: #a64bf4;
         }
@@ -140,13 +119,15 @@
 <body></body>
 <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js'></script>
 <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css' type='text/css' />
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.min.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.css' type='text/css' />
 
 
-    
         <div id='map'></div>
         <script>
             var BaseURL='http://192.168.1.9'
             mapboxgl.accessToken = 'pk.eyJ1Ijoic2FuYWhhbGxlYiIsImEiOiJjanhha2wwbngwMTZ1M3dvejg3cnpjdnRsIn0.Qq1tbiEUuBxJzH9q9SDSDw';
+           
             var map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v10',
@@ -154,24 +135,41 @@
                 zoom: 12
             });
             
+            function getposition(){
+                var url = BaseURL+''
+            }
             
-        
+            var nav = new mapboxgl.NavigationControl();
+            map.addControl(nav, 'bottom-right');               
+           // map.addControl(new mapboxgl.Navigation({position: 'left'}));
+                    
+
             var canvas = map.getCanvasContainer();
             var start = [10.18938160109326, 36.90004868883172];
             function getEndPointFromURL() {
-
-
                 var url = BaseURL+':3300/position/hamadi';
-
                 // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
                 var req = new XMLHttpRequest();
                 req.responseType = 'json';
                 req.open('GET', url, true);
                 req.onload = function () {
                     var data = req.response;
-                    console.log('data', data);
-                    var coords =[data[0].lng, data[0].lat];
+                    console.log('data', data); 
+                    console.log('tessst',data.length-1);
+                    //var countryId = data.adresse[data.length-1].adresse
+                  
+                var url1 = BaseURL+':3300/coord/'+data[data.length-1].adresse;
+                console.log('url1',url1);
+                var req1 = new XMLHttpRequest();
+                req1.responseType = 'json';
+                req1.open('GET', url1, true);
+                req1.onload = function () {
+                    var data1 = req1.response;
+                    console.log('data1',data1);
+                    
+                
 
+                    var coords =[data1[0].lng, data1[0].lat];
                     var directions = new MapboxDirections({
                         accessToken: mapboxgl.accessToken
                     });
@@ -179,6 +177,7 @@
                     directions.setOrigin(start.toString());
                     directions.setDestination(coords.toString());
                     console.log('coords', coords);
+
                     var end = {
                         type: 'FeatureCollection',
                         features: [{
@@ -218,18 +217,18 @@
                         });
                     }
                     getRoute(coords);
+                }
+                req1.send();
                 };
                 req.send();
             }
-
             // create a function to make a directions request
             function getRoute(end) {
                 // make a directions request using cycling profile
                 // an arbitrary start will always be the same
                 // only the end or destination will change
                 //var end = [10.1710982,36.8523503];
-                var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
-
+                var url = 'https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
                 // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
                 var req = new XMLHttpRequest();
                 req.responseType = 'json';
@@ -278,7 +277,6 @@
                 };
                 req.send();
             }
-
             map.on('load', function () {
                 // make an initial directions request that
                 // starts and ends at the same location
@@ -308,18 +306,14 @@
                         'circle-color': '#3887be'
                     }
                 });
-
                 //map.on('click', function(e) {
                 /* var coordsObj = e.lngLat;
                  canvas.style.cursor = '';
                  
                  });*/
-
                 //});
                 // this is where the code from the next step will go
             });
-
-
 // this is where the code for the next step will g
         </script>
 </body>
